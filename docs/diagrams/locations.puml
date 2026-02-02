@@ -1,0 +1,18 @@
+@startuml
+left to right direction
+actor "HR-менеджер" as HR
+actor "База данных" as DB <<System>>
+
+rectangle "Управление локациями" {
+  usecase "Создать новую локацию" as UC1
+  usecase "Указать адрес, название и IANA-код" as UC2
+  usecase "Определить статус (активна/неактивна)" as UC3
+  usecase "Зафиксировать дату и сохранить" as UC4
+}
+
+HR --> UC1
+UC1 ..> UC2 : <<include>>
+UC1 <.. UC3 : <<extend>>
+UC1 ..> UC4 : <<include>>
+UC4 -- DB
+@enduml
