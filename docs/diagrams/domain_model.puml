@@ -1,0 +1,79 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+interface ILifeTimeable {
+    +CreatedAt: DateTime
+    +UpdatedAt: DateTime
+    +DeletedAt: DateTime
+}
+
+interface IEntityLifeTimeTracker {
+    +Update(obj: ILifeTimeable): void
+}
+
+class LifeTimeTracker implements IEntityLifeTimeTracker {
+    +Update(obj: ILifeTimeable): void
+}
+
+class Department implements ILifeTimeable {
+    +Id: Guid
+    +Name: string
+    +Identifier: string
+    +ParentId: Guid
+    +Path: string
+    +Depth: short
+    +IsActive: bool
+    +CreatedAt: DateTime
+    +UpdatedAt: DateTime
+    +DeletedAt: DateTime
+    --
+    +AddPosition(pos: Position): void
+    +FindPosition(id: Guid): Position
+    +RemovePosition(id: Guid): void
+    +AddOffice(loc: Location): void
+    +FindOffice(id: Guid): Location
+    +RemoveOffice(id: Guid): void
+}
+
+class Position implements ILifeTimeable {
+    +Id: Guid
+    +Name: string
+    +Description: string
+    +IsActive: bool
+    +CreatedAt: DateTime
+    +UpdatedAt: DateTime
+    +DeletedAt: DateTime
+}
+
+class Location implements ILifeTimeable {
+    +Id: Guid
+    +Address: string
+    +Name: string
+    +Timezone: string
+    +CreatedAt: DateTime
+    +UpdatedAt: DateTime
+    +DeletedAt: DateTime
+}
+
+class DepartmentPosition {
+    +DepartmentId: Guid
+    +PositionId: Guid
+    +AddedAt: DateTime
+}
+
+class RentedOffice {
+    +DepartmentId: Guid
+    +LocationId: Guid
+    +AddedAt: DateTime
+    +ExpiredAt: DateTime
+}
+
+Department "1" *-- "many" DepartmentPosition
+Position "1" -- "many" DepartmentPosition
+
+Department "1" *-- "many" RentedOffice
+Location "1" -- "many" RentedOffice
+
+IEntityLifeTimeTracker ..> ILifeTimeable : "обновляет"
+
+@enduml
